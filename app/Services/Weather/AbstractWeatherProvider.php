@@ -7,7 +7,14 @@ namespace App\Services\Weather;
 abstract class AbstractWeatherProvider implements WeatherProviderInterface
 {
 
-    protected string $providerName;
+    public function __construct(
+        protected string $providerName
+    ) {}
+
+    public function getProviderName(): string
+    {
+        return $this->providerName;
+    }
 
     // nie wiemy jakie dane beda zwracane
     protected array|string|null $cachedData = null;

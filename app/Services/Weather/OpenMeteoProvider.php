@@ -10,10 +10,9 @@ use Override;
 
 class OpenMeteoProvider extends AbstractWeatherProvider
 {
-
-    public function getProviderName(): string
+    public function __construct()
     {
-        return $this->providerName;
+        parent::__construct('Open-Meteo');
     }
 
     #[Override]
