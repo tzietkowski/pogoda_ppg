@@ -11,7 +11,6 @@ use Exception;
 
 class FlightConditionsController extends Controller
 {
-    // Wstrzykujemy nasz Mózg Operacji
     public function __construct(
         private WeatherAnalyzerService $analyzer
     ) {}
@@ -19,9 +18,7 @@ class FlightConditionsController extends Controller
     public function check(): JsonResponse
     {
         try {
-
             $report = $this->analyzer->generateReport();
-
 
             return response()->json($report, 200);
         } catch (Exception $e) {

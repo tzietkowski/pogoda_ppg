@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 class WeatherProvidersTest extends TestCase
 {
     /** @test */
-    public function it_correctly_fetches_and_converts_open_meteo_data()
+    public function test_it_correctly_fetches_and_converts_open_meteo_data()
     {
         // 1. ARRANGE 
         Http::fake([
@@ -37,7 +37,7 @@ class WeatherProvidersTest extends TestCase
     }
 
     /** @test */
-    public function it_correctly_fetches_and_converts_metar_data()
+    public function test_it_correctly_fetches_and_converts_metar_data()
     {
         // 1. ARRANGE 
         Http::fake([
@@ -60,7 +60,7 @@ class WeatherProvidersTest extends TestCase
     }
 
     /** @test */
-    public function it_only_hits_the_api_once_due_to_caching()
+    public function test_it_only_hits_the_api_once_due_to_caching()
     {
         // ARRANGE
         Http::fake([
