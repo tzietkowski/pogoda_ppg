@@ -9,7 +9,7 @@
 
 A backend API service built with **Laravel**, designed to evaluate and analyze weather conditions for paramotoring (PPG) flights in the Czerwonak/Poznań area. 
 
-## 📸 Podgląd aplikacji
+## 📸 Application Preview
 ![Dashboard PPG](screenshots/dashboard.png)
 
 The application aggregates meteorological data from various external providers, processes it through a custom evaluation engine, and exposes clear, flight-readiness metrics via RESTful endpoints. It also maintains a historical log of weather conditions in a database for future trend analysis.
@@ -82,3 +82,9 @@ Triggered if external weather APIs fail to respond or return invalid data.
   "message": "Awaria sieci: Nie udało się pobrać danych z Open-Meteo"
 }
 ```
+
+## 🗺️ Roadmap & Future Development
+The backend API is fully operational, but the project is continuously evolving. Planned features for upcoming releases include:
+
+* **Vertical Wind Gradient Analysis:** Expanding the evaluation engine to fetch and analyze wind speeds at various altitudes (e.g., surface, 100m, 300m). This is critical for paramotor pilots to identify potential wind shear and plan safe ascents.
+* **Professional AWOS-Style Dashboard (React):** Developing a dedicated, decoupled frontend application using **React**. The goal is to build a high-contrast, full-screen dashboard inspired by professional Aviation Weather Observation Systems (AWOS). It will visualize real-time data such as wind roses relative to specific takeoff headings, pressure trends (QNH/QFE), and dew points in a pilot-friendly layout.
