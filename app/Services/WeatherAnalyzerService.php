@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Services\Weather\OpenMeteoProvider;
 use App\Services\Weather\MetarProvider;
+use App\Models\WeatherConditionLog;
 
 class WeatherAnalyzerService
 {
@@ -34,7 +35,7 @@ class WeatherAnalyzerService
             $warning = null;
         }
 
-        return [
+        $report = [
             'status' => $isSafe ? 'GO' : 'NO GO',
             'average_wind_ms' => $averageWind,
             'is_safe_to_fly' => $isSafe,
@@ -50,5 +51,9 @@ class WeatherAnalyzerService
                 ]
             ]
         ];
+
+        WeatherConditionLog::create($report);
+
+        return $report;
     }
 }
