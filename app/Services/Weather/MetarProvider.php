@@ -7,6 +7,12 @@ namespace App\Services\Weather;
 use Illuminate\Support\Facades\Http;
 use Exception;
 
+/**
+ * METAR weather provider.
+ *
+ * Reads the latest METAR report for the configured station and converts wind
+ * speed from knots to meters per second.
+ */
 class MetarProvider extends AbstractWeatherProvider
 {
     public function __construct()
@@ -14,6 +20,9 @@ class MetarProvider extends AbstractWeatherProvider
         parent::__construct('METAR (Poznań Ławica)');
     }
 
+    /**
+     * Get the current wind speed reported by the METAR station.
+     */
     public function getWindSpeed(): float
     {
         $data = $this->getCachedData();
@@ -23,6 +32,9 @@ class MetarProvider extends AbstractWeatherProvider
         return round($windKnots * 0.514444, 1);
     }
 
+    /**
+     * Get the current wind direction reported by the METAR station.
+     */
     public function getWindDirection(): int
     {
         $data = $this->getCachedData();
@@ -30,6 +42,12 @@ class MetarProvider extends AbstractWeatherProvider
         return (int) ($data[0]['wdir'] ?? 0);
     }
 
+    /**
+     * Fetch raw METAR data for the configured station.
+     *
+     * @return array<int, mixed>
+     * @throws Exception
+     */
     protected function fetchRawData(): array
     {
         $station = config('weather.metar_station');

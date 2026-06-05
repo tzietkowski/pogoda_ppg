@@ -9,12 +9,20 @@ use App\Services\WeatherAnalyzerService;
 use Illuminate\Http\JsonResponse;
 use Exception;
 
+/**
+ * API controller for flight condition checks.
+ *
+ * Returns a JSON report based on aggregated weather provider data.
+ */
 class FlightConditionsController extends Controller
 {
     public function __construct(
         private WeatherAnalyzerService $analyzer
     ) {}
 
+    /**
+     * Handle the flight conditions endpoint.
+     */
     public function check(): JsonResponse
     {
         try {
@@ -22,10 +30,9 @@ class FlightConditionsController extends Controller
 
             return response()->json($report, 200);
         } catch (Exception $e) {
-
             return response()->json([
                 'error' => 'Nie udało się pobrać danych pogodowych.',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 503);
         }
     }

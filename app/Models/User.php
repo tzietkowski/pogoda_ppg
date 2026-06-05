@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -12,6 +11,11 @@ use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
+/**
+ * Application user model.
+ *
+ * Represents authenticated users in the system.
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

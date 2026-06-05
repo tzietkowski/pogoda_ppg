@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services\Weather;
 
-use Illuminate\Support\Facades\Http; // Wbudowany klient HTTP Laravela
+use Illuminate\Support\Facades\Http;
 use Exception;
-use Override;
 
+/**
+ * Open-Meteo provider.
+ *
+ * Fetches the current weather for the configured coordinates and converts wind speed
+ * from km/h to m/s for the application's analysis logic.
+ */
 class OpenMeteoProvider extends AbstractWeatherProvider
 {
     public function __construct()
@@ -15,7 +20,9 @@ class OpenMeteoProvider extends AbstractWeatherProvider
         parent::__construct('Open-Meteo');
     }
 
-    #[Override]
+    /**
+     * Get the current wind speed from Open-Meteo.
+     */
     public function getWindSpeed(): float
     {
         $data = $this->getCachedData();
@@ -24,14 +31,22 @@ class OpenMeteoProvider extends AbstractWeatherProvider
         return round($windKmh / 3.6, 1);
     }
 
-    #[Override]
+    /**
+     * Get the wind direction reported by Open-Meteo.
+     */
     public function getWindDirection(): int
     {
         $data = $this->getCachedData();
+
         return (int) $data['current_weather']['winddirection'];
     }
 
-    #[Override]
+    /**
+     * Fetch raw weather data from the Open-Meteo API.
+     *
+     * @return array<string, mixed>
+     * @throws Exception
+     */
     protected function fetchRawData(): array
     {
         $lat = config('weather.latitude');

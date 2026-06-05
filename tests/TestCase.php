@@ -4,7 +4,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-abstract class TestCase extends BaseTestCase
-{
-    //
-}
+/**
+ * Base test case for application feature and unit tests.
+ */
+abstract class TestCase extends BaseTestCase {}

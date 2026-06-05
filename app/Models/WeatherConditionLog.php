@@ -6,8 +6,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Persisted flight condition reports from weather analysis.
+ *
+ * Stores the final decision, average wind data, and detail payload for later review.
+ */
 class WeatherConditionLog extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'status',
         'is_safe_to_fly',
@@ -15,12 +25,15 @@ class WeatherConditionLog extends Model
         'warning',
         'details',
     ];
-    protected function casts(): array
-    {
-        return [
-            'is_safe_to_fly' => 'boolean',
-            'average_wind_ms' => 'float',
-            'details' => 'array',
-        ];
-    }
+
+    /**
+     * The model attribute type casts.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_safe_to_fly' => 'boolean',
+        'average_wind_ms' => 'float',
+        'details' => 'array',
+    ];
 }
