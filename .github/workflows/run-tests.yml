@@ -35,5 +35,8 @@ jobs:
       - name: Run Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
 
-      - name: Execute Tests (Unit & Feature)
+- name: Execute Tests (Unit & Feature)
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
         run: php artisan test
