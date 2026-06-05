@@ -1,5 +1,6 @@
 # 🪂 Pogoda PPG - Weather API
 
+[![CI/CD Pipeline](https://github.com/tzietkowski/pogoda_ppg/actions/workflows/run-tests.yml/badge.svg)](https://github.com/tzietkowski/pogoda_ppg/actions)
 ![PHP](https://img.shields.io/badge/PHP-8.x-777BB4?style=flat-square&logo=php&logoColor=white)
 ![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=flat-square&logo=mysql&logoColor=white)
