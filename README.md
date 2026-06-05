@@ -8,6 +8,9 @@
 
 A backend API service built with **Laravel**, designed to evaluate and analyze weather conditions for paramotoring (PPG) flights in the Czerwonak/Poznań area. 
 
+## 📸 Podgląd aplikacji
+![Dashboard PPG](screenshots/dashboard.png)
+
 The application aggregates meteorological data from various external providers, processes it through a custom evaluation engine, and exposes clear, flight-readiness metrics via RESTful endpoints. It also maintains a historical log of weather conditions in a database for future trend analysis.
 
 ## 🎯 Key Features & Architecture
