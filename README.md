@@ -16,6 +16,9 @@ The application aggregates meteorological data from various external providers, 
 
 ## 🎯 Key Features & Architecture
 This project is built with a strong focus on clean code and modern PHP architecture:
+* **Dynamic Spot Management (CRUD):** A fully validated RESTful resource for managing takeoff locations, strictly verified against a whitelist of operational Polish METAR stations.
+* **Route Model Binding & Custom Keys:** Seamless endpoint resolution (e.g., `/api/conditions/EPPO`) allowing intuitive API consumption.
+* **Smart Data Caching (Memoization):** A custom caching layer within the abstract weather provider prevents redundant HTTP requests, mapping API responses to unique geographic coordinates and station codes.
 * **External API Integrations:** Fetches real-time data from Open-Meteo and aviation METAR stations (EPPO).
 * **Object-Oriented Design (OOP):** Heavily utilizes Interfaces, Abstract Classes, and polimorphism to ensure a modular data-fetching layer.
 * **Database Logging (Eloquent ORM):** Automatically logs weather reports and raw API responses (stored as JSON) into MySQL using Laravel Migrations and Eloquent.
@@ -50,13 +53,15 @@ This project uses Laravel Sail for a seamless, containerized development environ
    ```bash
    ./vendor/bin/sail up -d
 
-## 📡 API Endpoints
-GET /api/conditions
-Analyzes current weather data from multiple providers and returns a flight-readiness report. Every successful request is automatically logged to the database.
+## 📡 Core API Endpoints
+Flight Conditions Analysis
+GET /api/conditions/{metar_code?}
+Analyzes current weather data for a specific spot. If no parameter is provided, it defaults to the primary location (Czerwonak/EPPO).
 
 Response (200 OK):
 ```json
 {
+  "spot_name": "Pruszcz Gdański - Pola",
   "status": "GO",
   "average_wind_ms": 2.5,
   "is_safe_to_fly": true,
@@ -66,13 +71,31 @@ Response (200 OK):
       "wind_speed_ms": 2.3,
       "direction_deg": 180
     },
-    "metar_eppo": {
+    "metar_epgd": {
       "wind_speed_ms": 2.7,
       "direction_deg": 170
     }
   }
 }
 ```
+Manage Spots
+GET /api/spots
+Retrieve all configured flying spots.
+
+POST /api/spots
+Add a new spot (Strictly validated for coordinates and active Polish METAR codes).
+
+Request Payload Example:
+```json
+{
+    "name": "Pruszcz Gdański - Pola",
+    "latitude": 54.26,
+    "longitude": 18.63,
+    "metar_code": "EPGD"
+}
+```
+
+
 Error Response (503 Service Unavailable):
 Triggered if external weather APIs fail to respond or return invalid data.
 

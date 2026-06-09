@@ -21,7 +21,6 @@ class SpotController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Standaryzacja wejścia: Wymuszamy wielkie litery przed walidacją
         $request->merge([
             'metar_code' => strtoupper($request->input('metar_code', ''))
         ]);
@@ -53,7 +52,6 @@ class SpotController extends Controller
             'metar_code.in' => 'Podany kod stacji jest nieprawidłowy. Wybierz jeden z obsługiwanych polskich portów (np. EPPO, EPGD).'
         ]);
 
-        // 4. Zapis do bazy
         $spot = Spot::create($validated);
 
         return response()->json($spot, 201);

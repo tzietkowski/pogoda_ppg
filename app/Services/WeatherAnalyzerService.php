@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Services\Weather\OpenMeteoProvider;
 use App\Services\Weather\MetarProvider;
 use App\Models\WeatherConditionLog;
+use App\Models\Spot;
 
 /**
  * Analyze weather conditions from multiple providers and build a flight report.
@@ -27,13 +28,13 @@ class WeatherAnalyzerService
      *
      * @return array<string, mixed>
      */
-    public function generateReport(): array
+    public function generateReport(Spot $spot): array
     {
-        $meteoWind = $this->openMeteo->getWindSpeed();
-        $meteoDir = $this->openMeteo->getWindDirection();
+        $meteoWind = $this->openMeteo->getWindSpeed($spot);
+        $meteoDir = $this->openMeteo->getWindDirection($spot);
 
-        $metarWind = $this->metar->getWindSpeed();
-        $metarDir = $this->metar->getWindDirection();
+        $metarWind = $this->metar->getWindSpeed($spot);
+        $metarDir = $this->metar->getWindDirection($spot);
 
         $averageWind = round(($meteoWind + $metarWind) / 2, 1);
         $isSafe = $averageWind <= config('weather.max_safe_wind');
@@ -47,6 +48,7 @@ class WeatherAnalyzerService
         }
 
         $report = [
+            'spot_name' => $spot->name,
             'status' => $isSafe ? 'GO' : 'NO GO',
             'average_wind_ms' => $averageWind,
             'is_safe_to_fly' => $isSafe,
@@ -56,7 +58,7 @@ class WeatherAnalyzerService
                     'wind_speed_ms' => $meteoWind,
                     'direction_deg' => $meteoDir,
                 ],
-                'metar_eppo' => [
+                'metar_' . strtolower($spot->metar_code) => [
                     'wind_speed_ms' => $metarWind,
                     'direction_deg' => $metarDir,
                 ],

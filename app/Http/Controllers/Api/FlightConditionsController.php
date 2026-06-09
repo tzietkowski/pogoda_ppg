@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\WeatherAnalyzerService;
 use Illuminate\Http\JsonResponse;
+use App\Models\Spot;
 use Exception;
 
 /**
@@ -23,10 +24,16 @@ class FlightConditionsController extends Controller
     /**
      * Handle the flight conditions endpoint.
      */
-    public function check(): JsonResponse
+    public function check(?Spot $spot = null): JsonResponse
     {
         try {
-            $report = $this->analyzer->generateReport();
+            if (!$spot) {
+                $spot = Spot::first();
+            }
+            if (!$spot) {
+                return response()->json(['error' => 'Brak skonfigurowanych miejscówek w bazie.'], 404);
+            }
+            $report = $this->analyzer->generateReport($spot);
 
             return response()->json($report, 200);
         } catch (Exception $e) {

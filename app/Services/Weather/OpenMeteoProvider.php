@@ -6,12 +6,10 @@ namespace App\Services\Weather;
 
 use Illuminate\Support\Facades\Http;
 use Exception;
+use App\Models\Spot;
 
 /**
  * Open-Meteo provider.
- *
- * Fetches the current weather for the configured coordinates and converts wind speed
- * from km/h to m/s for the application's analysis logic.
  */
 class OpenMeteoProvider extends AbstractWeatherProvider
 {
@@ -23,20 +21,27 @@ class OpenMeteoProvider extends AbstractWeatherProvider
     /**
      * Get the current wind speed from Open-Meteo.
      */
-    public function getWindSpeed(): float
+    public function getWindSpeed(Spot $spot): float
     {
-        $data = $this->getCachedData();
-        $windKmh = $data['current_weather']['windspeed'];
+        $lat = $spot->latitude;
+        $lng = $spot->longitude;
 
-        return round($windKmh / 3.6, 1);
+        $cacheKey = "openmeteo_{$lat}_{$lng}";
+        $data = $this->getCachedData($cacheKey, ['lat' => $lat, 'lng' => $lng]);
+
+        return round($data['current_weather']['windspeed'] / 3.6, 1);
     }
 
     /**
      * Get the wind direction reported by Open-Meteo.
      */
-    public function getWindDirection(): int
+    public function getWindDirection(Spot $spot): int
     {
-        $data = $this->getCachedData();
+        $lat = $spot->latitude;
+        $lng = $spot->longitude;
+
+        $cacheKey = "openmeteo_{$lat}_{$lng}";
+        $data = $this->getCachedData($cacheKey, ['lat' => $lat, 'lng' => $lng]);
 
         return (int) $data['current_weather']['winddirection'];
     }
@@ -47,10 +52,10 @@ class OpenMeteoProvider extends AbstractWeatherProvider
      * @return array<string, mixed>
      * @throws Exception
      */
-    protected function fetchRawData(): array
+    protected function fetchRawData(array $params = []): array
     {
-        $lat = config('weather.latitude');
-        $lng = config('weather.longitude');
+        $lat = $params['lat'];
+        $lng = $params['lng'];
 
         $url = "https://api.open-meteo.com/v1/forecast?latitude={$lat}&longitude={$lng}&current_weather=true";
 

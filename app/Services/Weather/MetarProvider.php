@@ -6,26 +6,27 @@ namespace App\Services\Weather;
 
 use Illuminate\Support\Facades\Http;
 use Exception;
+use App\Models\Spot;
 
 /**
  * METAR weather provider.
- *
- * Reads the latest METAR report for the configured station and converts wind
- * speed from knots to meters per second.
  */
 class MetarProvider extends AbstractWeatherProvider
 {
     public function __construct()
     {
-        parent::__construct('METAR (Poznań Ławica)');
+        parent::__construct('METAR');
     }
 
     /**
      * Get the current wind speed reported by the METAR station.
      */
-    public function getWindSpeed(): float
+    public function getWindSpeed(Spot $spot): float
     {
-        $data = $this->getCachedData();
+        $metarCode = $spot->metar_code;
+
+        $cacheKey = "metar_{$metarCode}";
+        $data = $this->getCachedData($cacheKey, ['metarCode' => $metarCode]);
 
         $windKnots = $data[0]['wspd'] ?? 0;
 
@@ -35,22 +36,25 @@ class MetarProvider extends AbstractWeatherProvider
     /**
      * Get the current wind direction reported by the METAR station.
      */
-    public function getWindDirection(): int
+    public function getWindDirection(Spot $spot): int
     {
-        $data = $this->getCachedData();
+        $metarCode = $spot->metar_code;
+
+        $cacheKey = "metar_{$metarCode}";
+        $data = $this->getCachedData($cacheKey, ['metarCode' => $metarCode]);
 
         return (int) ($data[0]['wdir'] ?? 0);
     }
 
     /**
-     * Fetch raw METAR data for the configured station.
+     * Fetch raw METAR data for the requested station.
      *
      * @return array<int, mixed>
      * @throws Exception
      */
-    protected function fetchRawData(): array
+    protected function fetchRawData(array $params = []): array
     {
-        $station = config('weather.metar_station');
+        $station = $params['metarCode'];
 
         $url = "https://aviationweather.gov/api/data/metar?ids={$station}&format=json";
 

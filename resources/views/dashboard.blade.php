@@ -50,15 +50,12 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Uderzamy do naszego API z wczoraj!
             fetch('/api/conditions')
                 .then(response => response.json())
                 .then(data => {
-                    // Ukrywamy napis ładowania, pokazujemy kartę
                     document.getElementById('loading').classList.add('hidden');
                     document.getElementById('weather-card').classList.remove('hidden');
 
-                    // Ustawiamy kolory i status GO / NO GO
                     const badge = document.getElementById('status-badge');
                     badge.innerText = data.status;
                     
@@ -72,12 +69,10 @@
                         document.getElementById('is-safe').classList.add('text-red-400');
                     }
 
-                    // Wypełniamy liczby
                     document.getElementById('avg-wind').innerHTML = `${data.average_wind_ms} <span class="text-lg font-normal text-gray-400">m/s</span>`;
                     document.getElementById('meteo-data').innerText = `${data.details.open_meteo.wind_speed_ms} m/s (Kierunek: ${data.details.open_meteo.direction_deg}°)`;
                     document.getElementById('metar-data').innerText = `${data.details.metar_eppo.wind_speed_ms} m/s (Kierunek: ${data.details.metar_eppo.direction_deg}°)`;
 
-                    // Obsługa ostrzeżeń (np. front burzowy z dużą różnicą pomiarów)
                     if (data.warning) {
                         const warningBox = document.getElementById('warning-box');
                         warningBox.innerText = data.warning;

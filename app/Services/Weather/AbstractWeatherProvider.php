@@ -16,7 +16,7 @@ abstract class AbstractWeatherProvider implements WeatherProviderInterface
      *
      * @var array|string|null
      */
-    protected array|string|null $cachedData = null;
+    protected array $cachedData = [];
 
     public function __construct(
         protected string $providerName
@@ -35,13 +35,13 @@ abstract class AbstractWeatherProvider implements WeatherProviderInterface
      *
      * @return array|string
      */
-    protected function getCachedData(): array|string
+    protected function getCachedData(string $cacheKey, array $params = []): array|string
     {
-        if ($this->cachedData === null) {
-            $this->cachedData = $this->fetchRawData();
+        if (!isset($this->cachedData[$cacheKey])) {
+            $this->cachedData[$cacheKey] = $this->fetchRawData($params);
         }
 
-        return $this->cachedData;
+        return $this->cachedData[$cacheKey];
     }
 
     /**
@@ -49,5 +49,5 @@ abstract class AbstractWeatherProvider implements WeatherProviderInterface
      *
      * @return array|string
      */
-    abstract protected function fetchRawData(): array|string;
+    abstract protected function fetchRawData(array $params = []): array|string;
 }
